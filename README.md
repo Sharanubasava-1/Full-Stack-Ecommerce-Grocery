@@ -5,6 +5,7 @@ FreshCart is a comprehensive, full-stack MERN (MongoDB, Express, React, Node.js)
 ## 🚀 Features
 
 ### For Customers
+
 - **Authentication:** Secure JWT-based login and registration.
 - **Smart Basket & Catalog:** AI-suggested products based on habits and a full interactive shop.
 - **Subscriptions:** Subscribe to essential items (e.g., milk, bread) for daily, weekly, or monthly delivery.
@@ -16,6 +17,7 @@ FreshCart is a comprehensive, full-stack MERN (MongoDB, Express, React, Node.js)
 - **Dark Mode:** System and manual dark mode toggle.
 
 ### For Administrators
+
 - **Admin Dashboard:** Access analytics and revenue charts.
 - **Order Management:** Update order statuses (Processing, Out for Delivery, Delivered).
 - **Product Inventory:** Add, edit, and delete products. Toggle stock statuses.
@@ -24,6 +26,7 @@ FreshCart is a comprehensive, full-stack MERN (MongoDB, Express, React, Node.js)
 ## 🛠️ Technology Stack
 
 **Frontend:**
+
 - React (Vite)
 - Redux Toolkit (State Management)
 - Tailwind CSS v4 (Styling)
@@ -33,6 +36,7 @@ FreshCart is a comprehensive, full-stack MERN (MongoDB, Express, React, Node.js)
 - React Hook Form & Zod (Form Validation)
 
 **Backend:**
+
 - Node.js & Express
 - MongoDB & Mongoose
 - JSON Web Tokens (JWT) for Authentication
@@ -61,22 +65,27 @@ FreshCart is a comprehensive, full-stack MERN (MongoDB, Express, React, Node.js)
 ## 💻 Running Locally
 
 ### Prerequisites
+
 - Node.js (v18+)
 - MongoDB connection string (Atlas or Local)
 - Razorpay, Cloudinary, and Twilio credentials (optional but recommended for full features)
 
 ### 1. Clone the repository
+
 ```bash
 git clone https://github.com/Sharanubasava-1/Full-Stack-Ecommerce-Grocery.git
 cd Full-Stack-Ecommerce-Grocery
 ```
 
 ### 2. Backend Setup
+
 ```bash
 cd server
 npm install
 ```
+
 Create a `.env` file in the `server` directory using the following template:
+
 ```env
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
@@ -91,33 +100,44 @@ TWILIO_ACCOUNT_SID=your_twilio_sid
 TWILIO_AUTH_TOKEN=your_twilio_token
 TWILIO_PHONE_NUMBER=your_twilio_number
 ```
+
 Start the backend server:
+
 ```bash
 npm run dev
 ```
 
 ### 3. Frontend Setup
+
 ```bash
 cd client
 npm install
 ```
+
 Start the frontend development server:
+
 ```bash
 npm run dev
 ```
 
 ### 4. Admin Setup
+
 To access the admin panel, you can use the built-in script to create a superadmin:
+
 ```bash
 cd server
 node scripts/createAdmin.js
 ```
-*Default Credentials: `superadmin@grocery.com` / `SuperAdmin`*
+
+_Default Credentials: `superadmin@grocery.com` / `SuperAdmin`_
 
 ## 🌐 Deployment
-This project is configured for deployment on cloud platforms like **Render**. 
+
+This project is configured for deployment on cloud platforms like **Render**.
+
 - The backend runs as a Web Service.
-- The frontend runs as a Static Site. *(Note: Ensure you configure a redirect rule `/*` -> `/index.html` on your static hosting provider for React Router to work correctly).*
+- The frontend runs as a Static Site. _(Note: Ensure you configure a redirect rule `/_`->`/index.html` on your static hosting provider for React Router to work correctly).\*
 
 ## 📄 License
+
 This project is licensed under the MIT License.
