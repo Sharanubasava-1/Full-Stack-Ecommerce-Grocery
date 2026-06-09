@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { store } from '../store';
 import { setCredentials, logout } from '../store/authSlice';
+import { API_BASE_URL } from './apiBaseUrl';
 
 import { toast } from 'react-hot-toast';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://grocery-sub.onrender.com/api',
+  baseURL: API_BASE_URL,
 });
 
 // Request interceptor

@@ -10,11 +10,17 @@ const createAdmin = async () => {
     console.log('Connected to DB');
 
     const adminEmail = 'superadmin@grocery.com';
-    const adminPassword = 'superpassword123'; // It will be hashed by the pre-save hook
+    const adminPassword = 'SuperAdmin'; // It will be hashed by the pre-save hook
 
     const existingAdmin = await User.findOne({ email: adminEmail });
     if (existingAdmin) {
-      console.log('Admin user already exists.');
+      existingAdmin.name = 'Admin User';
+      existingAdmin.passwordHash = adminPassword;
+      existingAdmin.role = 'admin';
+      await existingAdmin.save();
+      console.log('Admin user already exists. Credentials updated.');
+      console.log(`Email: ${adminEmail}`);
+      console.log(`Password: ${adminPassword}`);
       process.exit(0);
     }
 

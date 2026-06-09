@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { logout } from '../../store/authSlice';
+import { API_BASE_URL } from '../../api/apiBaseUrl';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'https://grocery-sub.onrender.com/api',
+  baseUrl: API_BASE_URL,
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
     if (token) {
@@ -37,15 +38,15 @@ export const apiSlice = createApi({
         if (filters.page) params.append('page', filters.page);
         if (filters.limit) params.append('limit', filters.limit);
         if (filters.q) params.append('q', filters.q);
-        
+
         return `/products?${params.toString()}`;
       },
       providesTags: (result) =>
         result && result.products
           ? [
-              ...result.products.map(({ _id }) => ({ type: 'Product', id: _id })),
-              { type: 'Product', id: 'LIST' },
-            ]
+            ...result.products.map(({ _id }) => ({ type: 'Product', id: _id })),
+            { type: 'Product', id: 'LIST' },
+          ]
           : [{ type: 'Product', id: 'LIST' }],
     }),
     getProductById: builder.query({
@@ -81,9 +82,9 @@ export const apiSlice = createApi({
   }),
 });
 
-export const { 
-  useGetProductsQuery, 
-  useGetProductByIdQuery, 
+export const {
+  useGetProductsQuery,
+  useGetProductByIdQuery,
   useCreateOrderMutation,
   useVerifyPaymentMutation,
   useGetProfileQuery,
