@@ -8,7 +8,7 @@ exports.getOrders = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const orders = await Order.find({ userId }).populate('items.productId', 'name price pricePerUnit').sort({ createdAt: -1 });
-    
+
     // Map to the format expected by Dashboard
     const formattedOrders = orders.map(order => ({
       id: order._id.toString(),
@@ -27,7 +27,7 @@ exports.getOrders = async (req, res, next) => {
         };
       })
     }));
-    
+
     res.json(formattedOrders);
   } catch (error) {
     next(error);
@@ -60,7 +60,7 @@ exports.createOrder = async (req, res, next) => {
       const p = productMap.get(String(i.productId));
       if (!p) return res.status(400).json({ message: `Product ${i.productId} not found` });
       if (p.inStock === false) return res.status(400).json({ message: `Sorry, ${p.name} is currently out of stock` });
-      
+
       const price = p.price || p.pricePerUnit;
       totalAmount += price * i.qty;
       orderItems.push({
@@ -78,7 +78,7 @@ exports.createOrder = async (req, res, next) => {
     if (paymentMethod === 'Credit Card') {
       discountAmount += (totalAmount - discountAmount) * 0.10;
     }
-    
+
     totalAmount = Math.round(totalAmount - discountAmount + 20); // Includes discounts and delivery charge
 
     if (paymentMethod === 'COD') {
@@ -98,6 +98,14 @@ exports.createOrder = async (req, res, next) => {
       }
 
       return res.status(201).json({ order: newOrder });
+    }
+
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID;
+    const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET;
+    if (!razorpayKeyId || !razorpayKeySecret || razorpayKeyId === 'rzp_test_dummy' || razorpayKeySecret === 'dummy_secret') {
+      return res.status(503).json({
+        message: 'Online payments are temporarily unavailable because Razorpay credentials are not configured on the server.'
+      });
     }
 
     // Razorpay flow
@@ -155,7 +163,7 @@ exports.getAllOrders = async (req, res, next) => {
         })
       };
     });
-    
+
     res.json(formattedOrders);
   } catch (error) {
     next(error);
@@ -166,15 +174,15 @@ exports.updateOrderStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
     const order = await Order.findById(req.params.id);
-    
+
     if (!order) return res.status(404).json({ message: 'Order not found' });
-    
+
     order.status = status;
     if (status === 'Delivered') {
       order.deliveredDate = new Date();
     }
     await order.save();
-    
+
     res.json(order);
   } catch (error) {
     next(error);
@@ -207,17 +215,17 @@ exports.getOrderAnalytics = async (req, res, next) => {
 exports.cancelOrder = async (req, res, next) => {
   try {
     const order = await Order.findOne({ _id: req.params.id, userId: req.user.id });
-    
+
     if (!order) return res.status(404).json({ message: 'Order not found' });
     if (order.status !== 'Processing') return res.status(400).json({ message: 'Only processing orders can be cancelled' });
-    
+
     order.status = 'Cancelled';
     await order.save();
-    
+
     if (order.phoneNumber) {
       await sendSMS(order.phoneNumber, "Your order is cancelled");
     }
-    
+
     res.json({ message: 'Order cancelled successfully', order });
   } catch (error) {
     next(error);
@@ -227,7 +235,7 @@ exports.cancelOrder = async (req, res, next) => {
 exports.verifyPayment = async (req, res, next) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-    
+
     // Verify signature
     const hmac = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'test');
     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
