@@ -8,6 +8,7 @@ import axiosInstance from '../api/axiosInstance';
 
 export default function Subscribe() {
   const cartItems = useSelector(state => state.cart.items);
+    const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_dummy';
   const [step, setStep] = useState(1);
   const { data, isLoading } = useGetProductsQuery({ limit: 100 });
   const [subscriptionItems, setSubscriptionItems] = useState(
@@ -91,7 +92,7 @@ export default function Subscribe() {
 
       // 2. Open Razorpay Checkout overlay for the mandate
       const options = {
-        key: 'rzp_test_SkOmbhczc46lov', // Matches your server/.env RAZORPAY_KEY_ID
+          key: razorpayKeyId,
         subscription_id: subscription.razorpaySubscriptionId,
         name: 'FreshCart Subscriptions',
         description: 'Set up your recurring grocery delivery',
@@ -130,7 +131,7 @@ export default function Subscribe() {
     <div className="min-h-screen bg-gray-50 pb-20">
       <Navbar />
       
-      <div className="bg-gradient-to-r from-green-800 to-emerald-700 text-white py-12 px-4 text-center">
+      <div className="bg-linear-to-r from-green-800 to-emerald-700 text-white py-12 px-4 text-center">
         <h1 className="text-4xl font-bold mb-4 flex items-center justify-center gap-3">
           <Leaf className="w-8 h-8" /> Build Your Subscription Box
         </h1>

@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 
 export default function Checkout() {
   const { items, totalPrice } = useSelector(state => state.cart);
+    const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_dummy';
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [createOrder, { isLoading }] = useCreateOrderMutation();
@@ -85,7 +86,7 @@ export default function Checkout() {
       }
 
       const options = {
-        key: 'rzp_test_SkOmbhczc46lov', // Matches your server/.env RAZORPAY_KEY_ID
+          key: razorpayKeyId,
         amount: response.amount,
         currency: response.currency,
         order_id: response.orderId,

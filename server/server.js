@@ -7,6 +7,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 
 const app = express();
+const clientDistPath = path.resolve(__dirname, '../client/dist');
 
 // Auth routes
 const authRoutes = require('./routes/auth.routes');
@@ -23,22 +24,22 @@ const startSeasonAlertJob = require('./jobs/seasonAlert.job');
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-   console.log("MongoDB Connected");
+   .then(() => {
+      console.log("MongoDB Connected");
 
-   app.listen(PORT, () => {
-      console.log(`Server running on ${PORT}`);
-      
-      // Start CRON jobs after server is up and DB is connected
-      startBillingJob();
-      startSlotGeneratorJob();
-      startSeasonAlertJob();
+      app.listen(PORT, () => {
+         console.log(`Server running on ${PORT}`);
+
+         // Start CRON jobs after server is up and DB is connected
+         startBillingJob();
+         startSlotGeneratorJob();
+         startSeasonAlertJob();
+      });
+   })
+   .catch((err) => {
+      console.error("MongoDB Connection Error:");
+      console.error(err);
    });
-})
-.catch((err) => {
-   console.error("MongoDB Connection Error:");
-   console.error(err);
-});
 
 // Middleware
 app.use(helmet());
@@ -61,11 +62,11 @@ app.use('/api/orders', require('./routes/order.routes'));
 
 // Mock AI suggest endpoint
 app.get('/api/ai/suggest-basket', (req, res) => {
-  res.json([
-    { id: 'ai1', name: 'Organic Milk', price: 65, predictedQuantity: 2, confidence: 94, image: '/milk.png' },
-    { id: 'ai2', name: 'Fresh Apples', price: 120, predictedQuantity: 1, confidence: 88, image: '/apple.png' },
-    { id: 'ai3', name: 'Whole Wheat Bread', price: 45, predictedQuantity: 1, confidence: 76, image: '/bread.png' },
-  ]);
+   res.json([
+      { id: 'ai1', name: 'Organic Milk', price: 65, predictedQuantity: 2, confidence: 94, image: '/milk.png' },
+      { id: 'ai2', name: 'Fresh Apples', price: 120, predictedQuantity: 1, confidence: 88, image: '/apple.png' },
+      { id: 'ai3', name: 'Whole Wheat Bread', price: 45, predictedQuantity: 1, confidence: 76, image: '/bread.png' },
+   ]);
 });
 
 // Health check
@@ -73,9 +74,19 @@ app.get('/', (req, res) => {
    res.send("Backend Running");
 });
 
+// Serve the built React app when the client is deployed together with the API.
+if (require('fs').existsSync(clientDistPath)) {
+   app.use(express.static(clientDistPath));
+
+   // React Router fallback for routes like /admin, /dashboard, etc.
+   app.get(/^\/(?!api).*/, (req, res) => {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+   });
+}
+
 // 404 Catch-All
 app.use((req, res, next) => {
-  res.status(404).json({ message: `Route ${req.originalUrl} not found` });
+   res.status(404).json({ message: `Route ${req.originalUrl} not found` });
 });
 
 // Global Error Handler
@@ -83,8 +94,8 @@ const errorHandler = require('./middleware/errorHandler');
 app.use(errorHandler);
 
 process.on("uncaughtException", (err) => {
-    console.error("Uncaught Exception:", err);
+   console.error("Uncaught Exception:", err);
 });
 process.on("unhandledRejection", (err) => {
-    console.error("Unhandled Rejection:", err);
-});
+   console.error("Unhandled Rejection:", err);
+});

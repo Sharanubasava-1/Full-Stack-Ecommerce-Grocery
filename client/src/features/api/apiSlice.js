@@ -15,7 +15,10 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-  if (result.error && result.error.status === 401) {
+  const requestUrl = typeof args === 'string' ? args : args?.url;
+  const isAuthRequest = typeof requestUrl === 'string' && requestUrl.includes('/auth/');
+
+  if (result.error && result.error.status === 401 && isAuthRequest) {
     api.dispatch(logout());
     if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
       window.location.href = '/login';

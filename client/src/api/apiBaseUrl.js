@@ -1,5 +1,15 @@
 const rawApiUrl = import.meta.env.VITE_API_URL;
 
-export const API_BASE_URL = import.meta.env.DEV
-    ? '/api'
-    : (rawApiUrl && rawApiUrl.trim() ? rawApiUrl.replace(/\/$/, '') : 'https://grocery-sub.onrender.com/api');
+const getDefaultApiBaseUrl = () => {
+    if (import.meta.env.DEV) {
+        return '/api';
+    }
+
+    if (rawApiUrl && rawApiUrl.trim()) {
+        return rawApiUrl.replace(/\/$/, '');
+    }
+
+    return `${window.location.origin}/api`;
+};
+
+export const API_BASE_URL = getDefaultApiBaseUrl();

@@ -32,7 +32,9 @@ axiosInstance.interceptors.response.use(
       toast.error(message);
     }
 
-    if (error.response?.status === 401) {
+    const isAuthRequest = error.config?.url?.includes('/auth/');
+
+    if (error.response?.status === 401 && isAuthRequest) {
       store.dispatch(logout());
       // Only redirect if not already on login or register
       if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
