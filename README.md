@@ -7,10 +7,8 @@ FreshCart is a comprehensive, full-stack MERN (MongoDB, Express, React, Node.js)
 ### For Customers
 
 - **Authentication:** Secure JWT-based login and registration.
-- **Smart Basket & Catalog:** AI-suggested products based on habits and a full interactive shop.
 - **Subscriptions:** Subscribe to essential items (e.g., milk, bread) for daily, weekly, or monthly delivery.
 - **Delivery Slot Picker:** Choose convenient delivery times.
-- **Live Location:** Geolocation tracking to ensure accurate deliveries.
 - **Multi-Language Support:** Browse the application in 8 different languages.
 - **Cart & Payments:** Seamless checkout process integrated with Razorpay.
 - **Order Tracking:** Monitor order status from processing to delivery.
