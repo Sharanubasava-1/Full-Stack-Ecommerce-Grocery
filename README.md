@@ -1,6 +1,6 @@
 # FreshCart - Full-Stack Grocery Delivery Platform 🛒🥬
 
-FreshCart is a comprehensive, full-stack MERN (MongoDB, Express, React, Node.js) grocery subscription and delivery platform. It features real-time location tracking, multi-language support, a dynamic admin dashboard, an AI-suggested smart basket, and a robust subscription system for daily/weekly deliveries.
+FreshCart is a comprehensive, full-stack MERN (MongoDB, Express, React, Node.js) grocery subscription and delivery platform. It features multi-language support, a dynamic admin dashboard and a robust subscription system for daily/weekly deliveries.
 
 ## 🚀 Features
 
